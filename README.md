@@ -6,8 +6,11 @@
   </a>
 </p>
 
-# Distrito Creativo Convergente en Arte, Ciencia y Tecnología
-### DCC-ACT · Hoja de Ruta · Bogotá D.C. · Abril 2026
+# Distrito Creativo Convergente (DCC-ACT)
+
+![Distrito Creativo Convergente](assets/Distrito_Creativo_Convergente.png)
+
+### Hoja de Ruta · Bogotá D.C. · Abril 2026
 
 > Iniciativa ciudadana apoyada por **Proyectos en Red 2025** de la Secretaría de Cultura, Recreación y Deporte de Bogotá.
 

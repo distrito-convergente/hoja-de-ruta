@@ -1,9 +1,8 @@
 <p align="left">
-  <a href="https://distrito-convergente.github.io/hoja-de-ruta/">
-    <img src="https://img.shields.io/badge/HTML5-E34F26?style=plastic&logo=html5&logoColor=white" />
-  </a>
-  <a href="https://distrito-convergente.github.io/hoja-de-ruta/">
-    <img src="https://img.shields.io/badge/CSS3-1572B6?style=plastic&logo=css3&logoColor=white" />
+  <img src="https://img.shields.io/badge/HTML5-E34F26?style=plastic&logo=html5&logoColor=white" />
+  <img src="https://img.shields.io/badge/CSS3-1572B6?style=plastic&logo=css3&logoColor=white" />
+  <a href="http://creativecommons.org/licenses/by-sa/4.0/">
+    <img src="https://img.shields.io/badge/Licencia-CC_BY--SA_4.0-lightgrey.svg?style=plastic" alt="License: CC BY-SA 4.0" />
   </a>
 </p>
 
@@ -106,6 +105,12 @@ Canal de difusión que visibiliza las convergencias creativas que transforman la
 Programa de investigación-creación que explora las convergencias entre arte, ciencia y tecnología para pensar los retos de la ciudad contemporánea, reconociendo sus fricciones como oportunidades de creación y formación.
 
 `creación transdisciplinar` · `experimentación` · `investigación formativa`
+
+---
+
+## Licencia
+
+Este documento y sus contenidos gráficos están disponibles bajo la licencia **[Creative Commons Attribution-ShareAlike 4.0 International (CC BY-SA 4.0)](http://creativecommons.org/licenses/by-sa/4.0/)**. Eres libre de compartir y adaptar este material, siempre y cuando otorgues el crédito pertinente a la iniciativa y distribuyas tus contribuciones bajo la misma licencia.
 
 ---
 

@@ -8,7 +8,7 @@
 
 # Distrito Creativo Convergente (DCC-ACT)
 
-![Distrito Creativo Convergente](assets/Distrito_Creativo_Convergente.png)
+![Distrito Creativo Convergente](assets/Distrito_Creativo_Convergente_portada.png)
 
 ### Hoja de Ruta · Bogotá D.C. · Abril 2026
 

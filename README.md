@@ -16,7 +16,7 @@
 
 ---
 
-### [🌐 Consultar Hoja de Ruta (Web)](https://distrito-convergente.github.io/hoja-de-ruta/) | [📄 Documento PDF (Repositorio)](doc/Distrito%20Creativo%20Convergente%20(DCC-ACT).pdf)
+### [🌐 Consultar Hoja de Ruta (Web)](https://distrito-convergente.github.io/hoja-de-ruta/)
 
 ---
 

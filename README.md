@@ -36,6 +36,8 @@ La ciudad es un proceso colectivo, históricamente situado y políticamente impl
 
 El DCC-ACT entiende ese derecho como la posibilidad efectiva de imaginarla, usarla y transformarla como una **obra compartida**, explorando la creación cultural como práctica política.
 
+Ver más en: [Programa Emergente de Investigación-Creación](https://convergenciascreativas.org)
+
 ---
 
 ## 2. Presentación del Distrito

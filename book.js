@@ -500,20 +500,23 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // When print dialog is closed, restore book view
   window.addEventListener('afterprint', () => {
-    // Re-wrap pages
-    sheets.forEach((sheet, idx) => {
-      const frontFace = sheet.querySelector('.face-front');
-      const backFace = sheet.querySelector('.face-back');
-      
-      const pIdx = idx * 2;
-      frontFace.appendChild(originalPages[pIdx]);
-      if (pIdx + 1 < totalPages) {
-        backFace.appendChild(originalPages[pIdx + 1]);
-      }
-    });
+    // Add a slight delay to allow the browser to fully restore standard screen layout and viewport sizes
+    setTimeout(() => {
+      // Re-wrap pages
+      sheets.forEach((sheet, idx) => {
+        const frontFace = sheet.querySelector('.face-front');
+        const backFace = sheet.querySelector('.face-back');
+        
+        const pIdx = idx * 2;
+        frontFace.appendChild(originalPages[pIdx]);
+        if (pIdx + 1 < totalPages) {
+          backFace.appendChild(originalPages[pIdx + 1]);
+        }
+      });
 
-    document.body.appendChild(container);
-    document.body.classList.add('book-mode-active');
-    updateBookView();
+      document.body.appendChild(container);
+      document.body.classList.add('book-mode-active');
+      updateBookView();
+    }, 150);
   });
 });

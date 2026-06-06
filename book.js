@@ -46,6 +46,12 @@ document.addEventListener('DOMContentLoaded', () => {
     "Contraportada" // 19
   ];
 
+  // Icon constants
+  const ICON_SINGLE_PAGE = `<svg viewBox="0 0 24 24"><path d="M19 4H5c-1.11 0-2 .9-2 2v12c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V6c0-1.1-.89-2-2-2zm0 14H5V6h14v12z"/></svg>`;
+  const ICON_DOUBLE_PAGE = `<svg viewBox="0 0 24 24"><path d="M4 6H2v14c0 1.1.9 2 2 2h14v-2H4V6zm16-4H8c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm0 14H8V4h12v12z"/></svg>`;
+  const ICON_FULLSCREEN_ENTER = `<svg viewBox="0 0 24 24"><path d="M7 14H5v5h5v-2H7v-3zm-2-4h2V7h3V5H5v5zm12 7h-3v2h5v-5h-2v3zM14 5v2h3v3h2V5h-5z"/></svg>`;
+  const ICON_FULLSCREEN_EXIT = `<svg viewBox="0 0 24 24"><path d="M5 16h3v3h2v-5H5v2zm3-8H5v2h5V5H8v3zm6 11h2v-3h3v-2h-5v5zm2-11V5h-2v5h5V8h-3z"/></svg>`;
+
   // Save the original pages and their parent container
   const originalPages = Array.from(document.querySelectorAll('.page'));
   if (originalPages.length === 0) return;
@@ -122,7 +128,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const viewModeBtn = document.createElement('button');
   viewModeBtn.className = 'toolbar-btn view-mode-btn';
   viewModeBtn.title = 'Cambiar entre página única / doble';
-  viewModeBtn.innerHTML = `<svg viewBox="0 0 24 24"><path d="M4 6H2v14c0 1.1.9 2 2 2h14v-2H4V6zm16-4H8c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm0 14H8V4h12v12z"/></svg>`;
+  viewModeBtn.innerHTML = viewMode === 'double' ? ICON_SINGLE_PAGE : ICON_DOUBLE_PAGE;
   toolbarRight.appendChild(viewModeBtn);
 
   // Print Button
@@ -136,7 +142,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const fullscreenBtn = document.createElement('button');
   fullscreenBtn.className = 'toolbar-btn fullscreen-btn';
   fullscreenBtn.title = 'Pantalla completa';
-  fullscreenBtn.innerHTML = `<svg viewBox="0 0 24 24"><path d="M7 14H5v5h5v-2H7v-3zm-2-4h2V7h3V5H5v5zm12 7h-3v2h5v-5h-2v3zM14 5v2h3v3h2V5h-5z"/></svg>`;
+  fullscreenBtn.innerHTML = ICON_FULLSCREEN_ENTER;
   toolbarRight.appendChild(fullscreenBtn);
 
   toolbar.appendChild(toolbarRight);
@@ -209,6 +215,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
     if (viewMode === 'double') {
       container.classList.remove('single-view');
+      container.classList.toggle('cover-active', currentSpread === 0);
+      container.classList.toggle('back-cover-active', currentSpread === totalSheets);
       
       // Update sheet rotations and z-indices for double spread
       sheets.forEach((sheet, idx) => {
@@ -238,18 +246,13 @@ document.addEventListener('DOMContentLoaded', () => {
       // Update indicators
       const isMobile = window.innerWidth < 768;
       if (currentSpread === 0) {
-        pageIndicator.innerText = isMobile ? `Pág. 1 de ${totalPages}` : `Portada (1 / ${totalPages})`;
+        pageIndicator.innerText = `Pág. 1 de ${totalPages}`;
       } else if (currentSpread === totalSheets) {
-        pageIndicator.innerText = isMobile ? `Pág. ${totalPages} de ${totalPages}` : `Contraportada (${totalPages} / ${totalPages})`;
+        pageIndicator.innerText = `Pág. ${totalPages} de ${totalPages}`;
       } else {
         const leftPage = 2 * currentSpread;
         const rightPage = 2 * currentSpread + 1;
-        if (isMobile) {
-          pageIndicator.innerText = `Págs. ${leftPage}-${rightPage}`;
-        } else {
-          const leftTitle = PAGE_TITLES[leftPage - 1] || "Página";
-          pageIndicator.innerText = `Págs. ${leftPage}-${rightPage}: ${leftTitle}`;
-        }
+        pageIndicator.innerText = `Págs. ${leftPage}–${rightPage} de ${totalPages}`;
       }
 
       // Button states
@@ -257,6 +260,7 @@ document.addEventListener('DOMContentLoaded', () => {
       nextBtn.style.visibility = currentSpread === totalSheets ? 'hidden' : 'visible';
     } else {
       container.classList.add('single-view');
+      container.classList.remove('cover-active', 'back-cover-active');
 
       // Update sheets for single-page view
       const activeSheetIdx = Math.floor(currentPageIndex / 2);
@@ -283,13 +287,7 @@ document.addEventListener('DOMContentLoaded', () => {
       });
 
       // Update indicators
-      const isMobileSingle = window.innerWidth < 768;
-      if (isMobileSingle) {
-        pageIndicator.innerText = `Pág. ${currentPageIndex + 1} de ${totalPages}`;
-      } else {
-        const title = PAGE_TITLES[currentPageIndex] || "Página";
-        pageIndicator.innerText = `Pág. ${currentPageIndex + 1} de ${totalPages}: ${title}`;
-      }
+      pageIndicator.innerText = `Pág. ${currentPageIndex + 1} de ${totalPages}`;
 
       // Button states
       prevBtn.style.visibility = currentPageIndex === 0 ? 'hidden' : 'visible';
@@ -368,32 +366,65 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   // Fullscreen support
+  function isFullscreen() {
+    return !!(document.fullscreenElement || document.webkitFullscreenElement || document.mozFullScreenElement || document.msFullscreenElement);
+  }
+
   function toggleFullscreen() {
     userInteracted = true;
-    if (!document.fullscreenElement) {
-      container.requestFullscreen().catch(err => {
-        console.error(`Error going fullscreen: ${err.message}`);
-      });
+    if (!isFullscreen()) {
+      const requestFS = container.requestFullscreen || container.webkitRequestFullscreen || container.mozRequestFullScreen || container.msRequestFullscreen;
+      if (requestFS) {
+        requestFS.call(container).catch(err => {
+          console.error(`Error going fullscreen: ${err.message}`);
+        });
+      }
     } else {
-      document.exitFullscreen();
+      const exitFS = document.exitFullscreen || document.webkitExitFullscreen || document.mozCancelFullScreen || document.msExitFullscreen;
+      if (exitFS) {
+        exitFS.call(document);
+      }
     }
   }
+
+  // Update fullscreen button icon and resize on fullscreen change
+  function onFullscreenChange() {
+    if (isFullscreen()) {
+      fullscreenBtn.innerHTML = ICON_FULLSCREEN_EXIT;
+      fullscreenBtn.title = 'Salir de pantalla completa';
+    } else {
+      fullscreenBtn.innerHTML = ICON_FULLSCREEN_ENTER;
+      fullscreenBtn.title = 'Pantalla completa';
+    }
+    // Give browser a frame to settle the new viewport dimensions before resizing
+    requestAnimationFrame(() => resizeBook());
+  }
+
+  document.addEventListener('fullscreenchange', onFullscreenChange);
+  document.addEventListener('webkitfullscreenchange', onFullscreenChange);
+  document.addEventListener('mozfullscreenchange', onFullscreenChange);
+  document.addEventListener('MSFullscreenChange', onFullscreenChange);
 
   // Toggle single vs double page view
   function toggleViewMode() {
     userInteracted = true;
+    container.classList.add('no-transition');
     if (viewMode === 'double') {
       viewMode = 'single';
       // Sync page index from current spread
       currentPageIndex = currentSpread === 0 ? 0 : (currentSpread === totalSheets ? totalPages - 1 : (2 * currentSpread - 1));
-      viewModeBtn.innerHTML = `<svg viewBox="0 0 24 24"><path d="M19 4H5c-1.11 0-2 .9-2 2v12c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V6c0-1.1-.89-2-2-2zm0 14H5V6h14v12z"/></svg>`;
+      viewModeBtn.innerHTML = ICON_DOUBLE_PAGE;
     } else {
       viewMode = 'double';
       // Sync spread from current page index
       currentSpread = Math.floor((currentPageIndex + 1) / 2);
-      viewModeBtn.innerHTML = `<svg viewBox="0 0 24 24"><path d="M4 6H2v14c0 1.1.9 2 2 2h14v-2H4V6zm16-4H8c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm0 14H8V4h12v12z"/></svg>`;
+      viewModeBtn.innerHTML = ICON_SINGLE_PAGE;
     }
     updateBookView();
+    void container.offsetHeight; // Force reflow
+    setTimeout(() => {
+      container.classList.remove('no-transition');
+    }, 50);
   }
 
 
@@ -459,18 +490,31 @@ document.addEventListener('DOMContentLoaded', () => {
   window.addEventListener('resize', () => {
     const shouldBeSingle = window.innerWidth < 768;
     if (shouldBeSingle && viewMode === 'double') {
+      container.classList.add('no-transition');
       viewMode = 'single';
       currentPageIndex = currentSpread === 0 ? 0 : (currentSpread === totalSheets ? totalPages - 1 : (2 * currentSpread - 1));
       container.classList.add('single-view');
-      viewModeBtn.innerHTML = `<svg viewBox="0 0 24 24"><path d="M19 4H5c-1.11 0-2 .9-2 2v12c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V6c0-1.1-.89-2-2-2zm0 14H5V6h14v12z"/></svg>`;
+      viewModeBtn.innerHTML = ICON_DOUBLE_PAGE;
+      updateBookView();
+      void container.offsetHeight; // Force reflow
+      setTimeout(() => {
+        container.classList.remove('no-transition');
+      }, 50);
     } else if (!shouldBeSingle && viewMode === 'single' && window.innerWidth >= 768 && !userInteracted) {
       // Return to double on large viewport if user hasn't explicitly set single page mode
+      container.classList.add('no-transition');
       viewMode = 'double';
       currentSpread = Math.floor((currentPageIndex + 1) / 2);
       container.classList.remove('single-view');
-      viewModeBtn.innerHTML = `<svg viewBox="0 0 24 24"><path d="M4 6H2v14c0 1.1.9 2 2 2h14v-2H4V6zm16-4H8c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm0 14H8V4h12v12z"/></svg>`;
+      viewModeBtn.innerHTML = ICON_SINGLE_PAGE;
+      updateBookView();
+      void container.offsetHeight; // Force reflow
+      setTimeout(() => {
+        container.classList.remove('no-transition');
+      }, 50);
+    } else {
+      resizeBook();
     }
-    updateBookView();
   });
 
   // Watch for cursor movements to reset toolbar timeout

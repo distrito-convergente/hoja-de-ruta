@@ -2790,6 +2790,35 @@
         -webkit-user-select: none;
       }
 
+      /* Fullscreen support: ensure container fills the fullscreen viewport */
+      .book-container:fullscreen {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+      }
+      .book-container:-webkit-full-screen {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+      }
+      .book-container:-moz-full-screen {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+      }
+
+      /* Disable transitions during layout toggling */
+      .book-container.no-transition,
+      .book-container.no-transition * {
+        transition: none !important;
+      }
+
       /* Theme styling */
       .book-container.theme-dark {
         background: radial-gradient(circle at center, #1e293b 0%, #0f172a 100%);
@@ -2829,6 +2858,15 @@
         width: 100%;
         height: 100%;
         transform-style: preserve-3d;
+        transition: transform 0.8s cubic-bezier(0.645, 0.045, 0.355, 1);
+      }
+
+      /* Centrar portada y contraportada con desplazamiento suave */
+      .book-container.cover-active:not(.single-view) .book-3d {
+        transform: translateX(-25%);
+      }
+      .book-container.back-cover-active:not(.single-view) .book-3d {
+        transform: translateX(25%);
       }
 
       /* Sheet container */
@@ -3219,7 +3257,8 @@
           padding: 20px 10px 170px !important;
         }
 
-        .fullscreen-btn {
+        .fullscreen-btn,
+        .view-mode-btn {
           display: none !important;
         }
       }
